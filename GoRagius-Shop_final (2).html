@@ -1,0 +1,1712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GoRagius — Shop</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500&family=Inter:wght@400;500;600;700&display=swap');
+:root{
+  --ivory:        #FBF7F1;
+  --surface:      #FFFFFF;
+  --ink:          #2B2420;
+  --ink-soft:     #6B6058;
+  --line:         #E8DFD3;
+  --line-soft:    #F1EAE0;
+  --berry:        #A8434E;
+  --berry-dark:   #863440;
+  --berry-tint:   #F6E7E7;
+  --gold:         #C9A25E;
+  --gold-tint:    #F7EFDD;
+  --success:      #4C7A5E;
+  --success-tint: #E5F0E9;
+  --danger:       #B54A3F;
+  --danger-tint:  #F7E7E3;
+  --font-display: 'Cormorant Garamond', serif;
+  --font-body:    'Inter', sans-serif;
+  --radius-s: 6px;
+  --radius-m: 10px;
+  --radius-l: 16px;
+  --shadow-card: 0 1px 2px rgba(43,36,32,0.04), 0 8px 24px -12px rgba(43,36,32,0.12);
+  --shadow-pop:  0 12px 32px -8px rgba(43,36,32,0.22);
+}
+*{ box-sizing:border-box; }
+html{ scroll-behavior:smooth; }
+body{ margin:0; background:var(--ivory); color:var(--ink); font-family:var(--font-body); font-size:15px; line-height:1.5; -webkit-font-smoothing:antialiased; }
+h1,h2,h3,h4{ font-family:var(--font-display); font-weight:600; margin:0 0 .4em; letter-spacing:.01em; }
+h1{ font-size:2.6rem; }
+h2{ font-size:1.9rem; }
+h3{ font-size:1.3rem; }
+p{ margin:0 0 1em; color:var(--ink-soft); }
+a{ color:inherit; }
+img{ max-width:100%; display:block; }
+.eyebrow{ font-family:var(--font-body); font-size:.72rem; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:var(--berry); }
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible{ outline:2px solid var(--berry); outline-offset:2px; }
+.shell{ max-width:1180px; margin:0 auto; padding:0 28px; }
+.topbar{ position:sticky; top:0; z-index:40; background:rgba(251,247,241,.92); backdrop-filter:blur(10px); border-bottom:1px solid var(--line); }
+.topbar-inner{ max-width:1180px; margin:0 auto; padding:16px 28px; display:flex; align-items:center; justify-content:space-between; gap:16px; }
+.brand{ font-family:var(--font-display); font-size:1.5rem; font-weight:600; letter-spacing:.02em; text-decoration:none; color:var(--ink); cursor:pointer; }
+.brand span{ color:var(--berry); }
+.nav-links{ display:flex; gap:24px; align-items:center; list-style:none; margin:0; padding:0; }
+.nav-links a{ text-decoration:none; font-size:.88rem; font-weight:500; color:var(--ink-soft); cursor:pointer; }
+.nav-links a:hover{ color:var(--ink); }
+.btn{ display:inline-flex; align-items:center; justify-content:center; gap:8px; font-family:var(--font-body); font-weight:600; font-size:.86rem; padding:11px 20px; border-radius:999px; border:1px solid transparent; cursor:pointer; text-decoration:none; transition:transform .15s ease; white-space:nowrap; }
+.btn:active{ transform:scale(.97); }
+.btn-primary{ background:var(--berry); color:#fff; }
+.btn-primary:hover{ background:var(--berry-dark); }
+.btn-primary:disabled{ opacity:.5; cursor:not-allowed; }
+.btn-danger{ background:var(--danger-tint); color:var(--danger); }
+.btn-danger:hover{ background:var(--danger); color:#fff; }
+.btn-quiet{ background:var(--surface); border-color:var(--line); color:var(--ink); }
+.btn-quiet:hover{ border-color:var(--berry); color:var(--berry); }
+.btn-sm{ padding:7px 14px; font-size:.78rem; }
+.btn-block{ width:100%; }
+.card{ background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-l); box-shadow:var(--shadow-card); }
+.badge{ display:inline-flex; align-items:center; gap:6px; font-size:.72rem; font-weight:600; padding:4px 10px; border-radius:999px; letter-spacing:.02em; }
+.badge-live{ background:var(--success-tint); color:var(--success); }
+.badge-out{ background:var(--danger-tint); color:var(--danger); }
+.badge-admin{ background:var(--gold-tint); color:#8a6a26; }
+.badge-pending{ background:var(--line-soft); color:var(--ink-soft); }
+.badge-shipped{ background:var(--gold-tint); color:#8a6a26; }
+.badge-delivered{ background:var(--success-tint); color:var(--success); }
+.badge-cancelled{ background:var(--danger-tint); color:var(--danger); }
+label{ display:block; font-size:.8rem; font-weight:600; color:var(--ink); margin-bottom:6px; }
+input, select, textarea{ width:100%; font-family:var(--font-body); font-size:.92rem; color:var(--ink); background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-s); padding:10px 12px; transition:border-color .15s ease; }
+input:focus, select:focus, textarea:focus{ border-color:var(--berry); outline:none; }
+.field{ margin-bottom:16px; }
+.field-error{ font-size:.76rem; color:var(--danger); margin-top:5px; }
+#toast-root{ position:fixed; bottom:22px; right:22px; z-index:200; display:flex; flex-direction:column; gap:10px; }
+.toast{ background:var(--ink); color:#fff; padding:12px 18px; border-radius:var(--radius-m); font-size:.85rem; box-shadow:var(--shadow-pop); animation:toast-in .25s ease; max-width:320px; }
+.toast.error{ background:var(--danger); }
+.toast.success{ background:var(--success); }
+@keyframes toast-in{ from{ opacity:0; transform:translateY(8px); } to{ opacity:1; transform:translateY(0); } }
+.muted{ color:var(--ink-soft); }
+.center-column{ min-height:70vh; display:flex; align-items:center; justify-content:center; padding:40px 20px; }
+.empty-state{ text-align:center; padding:60px 20px; color:var(--ink-soft); }
+.empty-state h3{ color:var(--ink); }
+
+/* store */
+.hero{ position:relative; padding:64px 0 40px; text-align:center; overflow:hidden; }
+.hero h1{ max-width:640px; margin:8px auto 12px; position:relative; }
+.hero p{ max-width:480px; margin:0 auto; position:relative; }
+.hero-backdrop{ position:absolute; inset:-40px -10%; z-index:0; pointer-events:none; }
+.grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(240px,1fr)); gap:22px; padding:20px 0 80px; }
+.product{ overflow:hidden; display:flex; flex-direction:column; transition:transform .15s ease; }
+.product:hover{ transform:translateY(-3px); }
+.product-img{ aspect-ratio:4/5; background:var(--line-soft); overflow:hidden; }
+.product-img img{ width:100%; height:100%; object-fit:cover; }
+.product-body{ padding:16px 18px 18px; display:flex; flex-direction:column; gap:8px; flex:1; }
+.product-name{ font-family:var(--font-display); font-size:1.25rem; font-weight:600; }
+.product-desc{ font-size:.82rem; color:var(--ink-soft); margin:0; flex:1; }
+.product-foot{ display:flex; align-items:center; justify-content:space-between; margin-top:6px; }
+.price{ font-weight:700; font-size:1.05rem; }
+
+.cart-fab{ position:fixed; bottom:24px; right:24px; z-index:60; background:var(--berry); color:#fff; border:none; border-radius:999px; padding:14px 22px; font-weight:600; font-size:.85rem; cursor:pointer; box-shadow:var(--shadow-pop); display:flex; align-items:center; gap:8px; }
+.cart-count{ background:#fff; color:var(--berry); border-radius:999px; padding:1px 8px; font-size:.75rem; }
+
+.drawer-overlay{ position:fixed; inset:0; background:rgba(43,36,32,.35); z-index:80; opacity:0; pointer-events:none; transition:opacity .2s ease; }
+.drawer-overlay.open{ opacity:1; pointer-events:auto; }
+.drawer{ position:fixed; top:0; right:0; height:100%; width:min(420px, 92vw); background:var(--ivory); z-index:90; box-shadow:var(--shadow-pop); transform:translateX(100%); transition:transform .25s ease; display:flex; flex-direction:column; }
+.drawer.open{ transform:translateX(0); }
+.drawer-head{ padding:22px 24px; border-bottom:1px solid var(--line); display:flex; align-items:center; justify-content:space-between; }
+.drawer-items{ flex:1; overflow-y:auto; padding:16px 24px; }
+.cart-line{ display:flex; gap:12px; padding:14px 0; border-bottom:1px solid var(--line-soft); }
+.cart-line img{ width:60px; height:60px; object-fit:cover; border-radius:var(--radius-s); background:var(--line-soft); }
+.cart-line-info{ flex:1; }
+.cart-line-name{ font-weight:600; font-size:.9rem; }
+.qty-control{ display:flex; align-items:center; gap:10px; margin-top:6px; }
+.qty-btn{ width:24px; height:24px; border-radius:50%; border:1px solid var(--line); background:var(--surface); cursor:pointer; font-weight:700; line-height:1; }
+.drawer-foot{ padding:20px 24px 26px; border-top:1px solid var(--line); }
+.drawer-total{ display:flex; justify-content:space-between; font-weight:700; margin-bottom:14px; font-size:1.05rem; }
+.close-x{ background:none; border:none; font-size:1.3rem; cursor:pointer; color:var(--ink-soft); }
+
+.wave-section{ padding:8px 0 56px; overflow:hidden; }
+.wave-mask{ position:relative; overflow:hidden; -webkit-mask-image:linear-gradient(90deg, transparent 0, #000 8%, #000 92%, transparent 100%); mask-image:linear-gradient(90deg, transparent 0, #000 8%, #000 92%, transparent 100%); }
+.wave-track{ display:flex; align-items:center; gap:28px; width:max-content; animation:wave-scroll 40s linear infinite; }
+.wave-section:hover .wave-track{ animation-play-state:paused; }
+@keyframes wave-scroll{ from{ transform:translateX(0); } to{ transform:translateX(-50%); } }
+.wave-item{ position:relative; display:flex; flex-direction:column; align-items:center; gap:8px; flex:0 0 auto; }
+.wave-item img{ width:140px; height:200px; object-fit:contain; filter:drop-shadow(0 8px 16px rgba(43,36,32,.12)); border-radius:8px; transition:transform .2s ease; }
+.wave-item:hover img{ transform:translateY(-4px); }
+.wave-item span{ font-family:var(--font-display); font-style:italic; font-size:.95rem; color:var(--ink-soft); text-align:center; }
+
+.trust-strip{ display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:18px; padding:34px 0 10px; }
+.trust-item{ display:flex; gap:12px; }
+.trust-item .dot{ width:8px; height:8px; border-radius:50%; background:var(--berry); margin-top:7px; flex:none; }
+.trust-item h4{ font-family:var(--font-body); font-size:.86rem; font-weight:700; margin:0 0 2px; }
+.trust-item p{ font-size:.8rem; margin:0; }
+
+footer.site-footer{ border-top:1px solid var(--line); margin-top:50px; padding:40px 0 30px; }
+.footer-grid{ display:flex; flex-wrap:wrap; gap:32px; justify-content:space-between; }
+.footer-cols{ display:flex; gap:60px; flex-wrap:wrap; }
+.footer-col h4{ font-size:.72rem; text-transform:uppercase; letter-spacing:.1em; color:var(--ink-soft); margin:0 0 12px; }
+.footer-col a{ display:block; font-size:.85rem; text-decoration:none; color:var(--ink); margin-bottom:9px; cursor:pointer; }
+.footer-col a:hover{ color:var(--berry); }
+
+/* auth */
+.auth-card{ width:100%; max-width:400px; padding:40px 36px; }
+.auth-tabs{ display:flex; gap:4px; background:var(--line-soft); padding:4px; border-radius:999px; margin-bottom:28px; }
+.auth-tab{ flex:1; text-align:center; padding:9px 0; border-radius:999px; font-size:.82rem; font-weight:600; color:var(--ink-soft); cursor:pointer; }
+.auth-tab.active{ background:var(--surface); color:var(--ink); box-shadow:var(--shadow-card); }
+.auth-head{ text-align:center; margin-bottom:26px; }
+
+/* admin */
+.admin-layout{ display:grid; grid-template-columns:220px 1fr; min-height:100vh; }
+.side{ background:var(--surface); border-right:1px solid var(--line); padding:26px 18px; overflow-y:auto; max-height:100vh; }
+.side .brand{ display:block; padding:0 8px 24px; }
+.side-link{ display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:var(--radius-s); font-size:.86rem; font-weight:600; color:var(--ink-soft); cursor:pointer; margin-bottom:2px; }
+.side-link.active, .side-link:hover{ background:var(--berry-tint); color:var(--berry-dark); }
+.admin-main{ padding:32px 40px 80px; overflow-y:auto; }
+.main-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:26px; flex-wrap:wrap; gap:14px; }
+.panel{ display:none; }
+.panel.active{ display:block; }
+table{ width:100%; border-collapse:collapse; }
+th{ text-align:left; font-size:.72rem; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-soft); padding:10px 14px; border-bottom:1px solid var(--line); }
+td{ padding:12px 14px; border-bottom:1px solid var(--line-soft); font-size:.88rem; vertical-align:middle; }
+.thumb{ width:48px; height:48px; border-radius:var(--radius-s); object-fit:cover; background:var(--line-soft); }
+.row-actions{ display:flex; gap:6px; }
+.modal-overlay{ position:fixed; inset:0; background:rgba(43,36,32,.4); z-index:100; display:none; align-items:flex-start; justify-content:center; padding:6vh 20px; overflow-y:auto; }
+.modal-overlay.open{ display:flex; }
+.modal{ width:100%; max-width:480px; padding:30px; }
+.modal-head{ display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; }
+.two-col{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.stat-row{ display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:16px; margin-bottom:28px; }
+.stat-card{ padding:18px 20px; }
+.stat-num{ font-family:var(--font-display); font-size:2rem; font-weight:600; }
+.stat-label{ font-size:.76rem; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.05em; }
+
+.order-detail{ padding:20px; margin-bottom:14px; }
+.order-header{ display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px; padding-bottom:12px; border-bottom:1px solid var(--line); }
+.order-id{ font-weight:600; color:var(--ink); }
+.order-status{ font-size:.8rem; }
+.order-customer{ font-size:.85rem; margin-bottom:8px; }
+.order-date{ font-size:.8rem; color:var(--ink-soft); margin-bottom:4px; }
+.order-items{ font-size:.85rem; margin:8px 0; }
+.order-total{ font-weight:600; font-size:.95rem; margin:8px 0; }
+.delivery-info{ padding:10px; background:var(--success-tint); border-radius:var(--radius-s); font-size:.8rem; margin-top:10px; }
+.delivery-info.late{ background:var(--danger-tint); }
+.admin-status-select{ max-width:130px; padding:4px 8px; font-size:.8rem; }
+
+/* nav cart + drawer tabs + my orders */
+.nav-cart{ display:inline-flex; align-items:center; gap:8px; color:var(--ink) !important; font-weight:600 !important; }
+.nav-cart svg{ width:18px; height:18px; }
+.nav-cart-count{ min-width:20px; text-align:center; background:var(--berry); color:#fff; border-radius:999px; padding:1px 7px; font-size:.7rem; font-weight:700; }
+.nav-cart-count.zero{ background:var(--line); color:var(--ink-soft); }
+.nav-cart-dot{ width:8px; height:8px; border-radius:50%; background:var(--gold); display:none; }
+.nav-cart-dot.on{ display:inline-block; }
+.drawer-tabs{ display:flex; gap:4px; margin:14px 24px 0; background:var(--line-soft); padding:4px; border-radius:999px; }
+.drawer-tab{ flex:1; border:none; background:transparent; font-family:var(--font-body); font-size:.82rem; font-weight:600; color:var(--ink-soft); padding:9px 0; border-radius:999px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px; }
+.drawer-tab.active{ background:var(--surface); color:var(--ink); box-shadow:var(--shadow-card); }
+.tab-pill{ background:var(--berry); color:#fff; border-radius:999px; padding:0 7px; font-size:.68rem; line-height:1.5; }
+.drawer-pane{ flex:1; min-height:0; display:flex; flex-direction:column; }
+.drawer-pane[hidden]{ display:none; }
+.my-orders{ flex:1; overflow-y:auto; padding:16px 24px 28px; }
+.mo-card{ background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-m); padding:16px; margin-bottom:14px; }
+.mo-top{ display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:10px; }
+.mo-id{ font-family:monospace; font-weight:700; font-size:.9rem; }
+.mo-date{ font-size:.74rem; color:var(--ink-soft); }
+.mo-items{ font-size:.84rem; margin:10px 0 4px; }
+.mo-items div{ display:flex; justify-content:space-between; padding:3px 0; }
+.mo-total{ display:flex; justify-content:space-between; font-weight:700; padding-top:8px; border-top:1px solid var(--line-soft); margin-top:6px; }
+.track{ display:flex; margin:16px 0 6px; }
+.track-step{ flex:1; text-align:center; position:relative; font-size:.68rem; color:var(--ink-soft); font-weight:600; }
+.track-step::before{ content:""; position:absolute; top:11px; left:-50%; width:100%; height:2px; background:var(--line); z-index:0; }
+.track-step:first-child::before{ display:none; }
+.track-dot{ position:relative; z-index:1; width:24px; height:24px; border-radius:50%; margin:0 auto 6px; background:var(--surface); border:2px solid var(--line); display:flex; align-items:center; justify-content:center; font-size:.7rem; color:#fff; }
+.track-step.done{ color:var(--success); }
+.track-step.done::before{ background:var(--success); }
+.track-step.done .track-dot{ background:var(--success); border-color:var(--success); }
+.track-step.current .track-dot{ border-color:var(--berry); box-shadow:0 0 0 4px var(--berry-tint); }
+.track-step.current{ color:var(--berry); }
+.mo-note{ font-size:.8rem; padding:10px 12px; border-radius:var(--radius-s); margin:10px 0; }
+.mo-note.info{ background:var(--gold-tint); color:#7a5d1f; }
+.mo-note.ok{ background:var(--success-tint); color:var(--success); }
+.mo-note.bad{ background:var(--danger-tint); color:var(--danger); }
+.mo-actions{ display:flex; gap:8px; margin-top:12px; flex-wrap:wrap; }
+.mo-actions .btn{ flex:1; min-width:120px; }
+.mo-flash{ animation:mo-flash 1.6s ease; }
+@keyframes mo-flash{ 0%{ box-shadow:0 0 0 3px var(--gold); } 100%{ box-shadow:0 0 0 0 transparent; } }
+@media (max-width:520px){ .topbar-inner{ padding:14px 16px; } .nav-links{ gap:14px; } }
+
+/* whatsapp + reviews + feedback */
+.wa-fab{ position:fixed; left:20px; bottom:24px; z-index:60; width:56px; height:56px; border-radius:50%; background:#25D366; display:flex; align-items:center; justify-content:center; box-shadow:var(--shadow-pop); text-decoration:none; transition:transform .15s ease; }
+.wa-fab:hover{ transform:scale(1.07); }
+.wa-fab svg{ width:30px; height:30px; fill:#fff; }
+.wa-fab .wa-tip{ position:absolute; left:66px; background:var(--ink); color:#fff; font-size:.76rem; font-weight:600; padding:7px 12px; border-radius:var(--radius-s); white-space:nowrap; opacity:0; pointer-events:none; transform:translateX(-6px); transition:all .18s ease; }
+.wa-fab:hover .wa-tip, .wa-fab:focus-visible .wa-tip{ opacity:1; transform:translateX(0); }
+@media (max-width:520px){ .wa-fab .wa-tip{ display:none; } }
+.stars{ color:var(--gold); letter-spacing:2px; }
+.reviews-head{ display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:16px; margin-bottom:22px; }
+.reviews-actions{ display:flex; gap:10px; flex-wrap:wrap; }
+.reviews-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(260px,1fr)); gap:18px; }
+.review-card{ padding:20px; display:flex; flex-direction:column; gap:8px; }
+.review-card p{ margin:0; font-size:.88rem; color:var(--ink); }
+.review-meta{ font-size:.76rem; color:var(--ink-soft); }
+.fb-tabs{ display:flex; gap:4px; background:var(--line-soft); padding:4px; border-radius:999px; margin-bottom:20px; }
+.fb-tab{ flex:1; border:none; background:transparent; font-family:var(--font-body); font-size:.82rem; font-weight:600; color:var(--ink-soft); padding:9px 0; border-radius:999px; cursor:pointer; }
+.fb-tab.active{ background:var(--surface); color:var(--ink); box-shadow:var(--shadow-card); }
+.star-picker{ display:flex; gap:2px; }
+.star-btn{ background:none; border:none; font-size:2rem; line-height:1; color:var(--line); cursor:pointer; padding:0 2px; transition:transform .1s ease; }
+.star-btn:hover{ transform:scale(1.15); }
+.star-btn.on{ color:var(--gold); }
+.fb-admin-card{ padding:18px 20px; margin-bottom:14px; }
+.fb-admin-top{ display:flex; justify-content:space-between; align-items:flex-start; gap:12px; flex-wrap:wrap; margin-bottom:8px; }
+.search-bar{ max-width:440px; margin:14px auto 0; position:relative; }
+.search-bar svg{ position:absolute; left:14px; top:50%; transform:translateY(-50%); width:18px; height:18px; stroke:var(--ink-soft); fill:none; stroke-width:1.8; pointer-events:none; }
+.search-bar input{ padding:12px 16px 12px 42px; border-radius:999px; font-size:.92rem; }
+.card-rating{ display:flex; align-items:center; gap:1px; font-size:.8rem; }
+.card-star{ background:none; border:none; padding:0 1px; font-size:1.15rem; line-height:1; color:var(--line); cursor:pointer; transition:transform .1s ease; }
+.card-star.on{ color:var(--gold); }
+.card-star:hover{ transform:scale(1.2); color:var(--gold); }
+.card-rating .muted{ margin-left:8px; }
+</style>
+</head>
+<body>
+
+<!-- STORE VIEW -->
+<div id="view-store">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" id="brand-home-store">Go<span>Ragius</span></a>
+    <ul class="nav-links">
+      <li><a class="nav-cart" id="nav-cart" role="button" aria-label="Open cart and orders">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6h15l-1.6 9H7.6L6 6z"/><path d="M6 6 5.2 3H2"/><circle cx="9" cy="20" r="1.3"/><circle cx="18" cy="20" r="1.3"/></svg>
+        Cart <span class="nav-cart-count zero" id="nav-cart-count">0</span><span class="nav-cart-dot" id="nav-cart-dot" title="Order update"></span></a></li>
+      <li><a id="nav-account">Sign in</a></li>
+      <li id="nav-admin-link" style="display:none;"><a id="admin-link">Admin</a></li>
+    </ul>
+  </div>
+</header>
+
+<section class="shell hero">
+  <div class="hero-backdrop">
+    <svg viewBox="0 0 1200 420" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="blob1" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#A8434E" stop-opacity=".16"/><stop offset="1" stop-color="#A8434E" stop-opacity="0"/></radialGradient>
+        <radialGradient id="blob2" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#C9A25E" stop-opacity=".18"/><stop offset="1" stop-color="#C9A25E" stop-opacity="0"/></radialGradient>
+      </defs>
+      <circle cx="230" cy="130" r="210" fill="url(#blob1)"/>
+      <circle cx="980" cy="260" r="240" fill="url(#blob2)"/>
+    </svg>
+  </div>
+  <div class="eyebrow">Small-batch, hand-finished</div>
+  <h1>Scent, made for the way you actually move through a day.</h1>
+  <p>Three signatures, always in rotation, always open to becoming a fourth.</p>
+</section>
+
+<section class="wave-section" aria-hidden="true">
+  <div class="wave-mask">
+    <div class="wave-track" id="wave-track"></div>
+  </div>
+</section>
+
+<section class="shell">
+  <div class="trust-strip">
+    <div class="trust-item"><div class="dot"></div><div><h4>Hand-poured in small batches</h4><p>Every bottle is mixed and finished by us, not a factory line.</p></div></div>
+    <div class="trust-item"><div class="dot"></div><div><h4>Cruelty-free, always</h4><p>Never tested on animals, at any stage.</p></div></div>
+    <div class="trust-item"><div class="dot"></div><div><h4>Free delivery across Karachi</h4><p>Nationwide shipping available at checkout.</p></div></div>
+  </div>
+</section>
+
+<section class="shell">
+  <div class="search-bar">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5" stroke-linecap="round"/></svg>
+    <input id="product-search" type="search" placeholder="Search perfumes…" aria-label="Search products" autocomplete="off">
+  </div>
+  <div id="product-grid" class="grid"></div>
+</section>
+
+<section class="shell" id="reviews-section" style="padding-bottom:30px;">
+  <div class="reviews-head">
+    <div>
+      <div class="eyebrow">Reviews</div>
+      <h2 style="margin:4px 0 6px;">What our customers say</h2>
+      <div id="reviews-summary" class="muted" style="font-size:.88rem;"></div>
+    </div>
+    <div class="reviews-actions">
+      <button class="btn btn-primary" id="open-review-btn">★ Write a review</button>
+      <button class="btn btn-quiet" id="open-feedback-btn">Send feedback</button>
+    </div>
+  </div>
+  <div id="reviews-list" class="reviews-grid"></div>
+  <div style="text-align:center; margin-top:18px;"><button class="btn btn-quiet btn-sm" id="reviews-more" style="display:none;">Show all reviews</button></div>
+</section>
+
+
+<a class="wa-fab" id="wa-fab" href="#" aria-label="Chat with us on WhatsApp">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38a9.9 9.9 0 0 0 4.74 1.21h.01c5.46 0 9.91-4.45 9.91-9.91A9.84 9.84 0 0 0 12.04 2zm0 18.15h-.01a8.2 8.2 0 0 1-4.18-1.14l-.3-.18-3.12.82.83-3.04-.2-.31a8.2 8.2 0 0 1-1.26-4.39c0-4.54 3.7-8.24 8.25-8.24 2.2 0 4.27.86 5.83 2.42a8.18 8.18 0 0 1 2.41 5.83c0 4.54-3.7 8.23-8.25 8.23zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.12-.17.25-.64.81-.78.97-.14.17-.29.19-.54.06-.25-.12-1.05-.39-2-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.02-.38.11-.5.11-.11.25-.29.37-.43.12-.14.17-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.41-.42-.56-.42h-.48c-.17 0-.43.06-.66.31-.22.25-.86.85-.86 2.07 0 1.22.89 2.4 1.01 2.56.12.17 1.75 2.67 4.23 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.47-.6 1.67-1.18.21-.58.21-1.07.14-1.18-.06-.1-.23-.16-.48-.29z"/></svg>
+  <span class="wa-tip">Chat on WhatsApp</span>
+</a>
+<button class="cart-fab" id="cart-fab">Cart <span class="cart-count" id="cart-count">0</span></button>
+<div class="drawer-overlay" id="drawer-overlay"></div>
+<aside class="drawer" id="drawer">
+  <div class="drawer-head"><h3 style="margin:0;" id="drawer-title">Your cart</h3><button class="close-x" id="drawer-close" aria-label="Close">✕</button></div>
+  <div class="drawer-tabs" role="tablist">
+    <button class="drawer-tab active" data-dtab="cart" role="tab">Cart</button>
+    <button class="drawer-tab" data-dtab="orders" role="tab">My orders <span class="tab-pill" id="orders-live-count" style="display:none;">0</span></button>
+  </div>
+  <div class="drawer-pane" id="pane-cart">
+    <div class="drawer-items" id="drawer-items"></div>
+    <div class="drawer-foot">
+      <div class="drawer-total"><span>Total</span><span id="drawer-total">Rs 0</span></div>
+      <button class="btn btn-primary btn-block" id="checkout-btn">Checkout</button>
+    </div>
+  </div>
+  <div class="drawer-pane" id="pane-orders" hidden>
+    <div class="my-orders" id="my-orders"></div>
+  </div>
+</aside>
+
+<footer class="site-footer">
+  <div class="shell">
+    <div class="footer-grid">
+      <div class="footer-brand"><a class="brand" id="brand-home-footer">Go<span>Ragius</span></a><p>Small-batch fragrance, made in Karachi.</p></div>
+      <div class="footer-cols">
+        <div class="footer-col"><h4>Account</h4><a id="footer-signin">Sign in</a><a id="footer-signup">Create account</a></div>
+        <div class="footer-col"><h4>Reach us</h4><a href="mailto:goragius@gmail.com">goragius@gmail.com</a><a id="footer-wa" href="#">WhatsApp us</a><a id="footer-feedback">Leave feedback</a></div>
+      </div>
+    </div>
+    <div style="margin-top:32px; padding-top:18px; border-top:1px solid var(--line-soft); font-size:.76rem; color:var(--ink-soft);">© <span id="year"></span> GoRagius. Karachi, Pakistan</div>
+  </div>
+</footer>
+
+  <div class="modal-overlay" id="feedback-modal">
+    <div class="card modal">
+      <div class="modal-head"><h3 style="margin:0;" id="fb-title">Share your thoughts</h3><button class="close-x" id="fb-close" aria-label="Close">✕</button></div>
+      <div class="fb-tabs">
+        <button type="button" class="fb-tab active" data-fbtype="review">Product review</button>
+        <button type="button" class="fb-tab" data-fbtype="feedback">General feedback</button>
+      </div>
+      <form id="feedback-form">
+        <div class="field" id="fb-product-wrap"><label for="fb-product">Which perfume?</label><select id="fb-product"></select></div>
+        <div class="field" id="fb-rating-wrap"><label>Your rating</label><div class="star-picker" id="star-picker">
+          <button type="button" class="star-btn" data-star="1" aria-label="1 star">★</button><button type="button" class="star-btn" data-star="2" aria-label="2 stars">★</button><button type="button" class="star-btn" data-star="3" aria-label="3 stars">★</button><button type="button" class="star-btn" data-star="4" aria-label="4 stars">★</button><button type="button" class="star-btn" data-star="5" aria-label="5 stars">★</button>
+        </div></div>
+        <div class="field"><label for="fb-name">Your name</label><input id="fb-name" maxlength="60" required></div>
+        <div class="field"><label for="fb-message" id="fb-message-label">Your review</label><textarea id="fb-message" rows="4" maxlength="1000" required placeholder="Tell us what you think…"></textarea></div>
+        <button type="submit" class="btn btn-primary btn-block" id="fb-submit">Submit review</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="checkout-modal">
+    <div class="card modal">
+      <div class="modal-head"><h3 style="margin:0;">Delivery Details</h3><button class="close-x" id="checkout-modal-close">✕</button></div>
+      <form id="checkout-form">
+        <div class="field"><label for="co-name">Full Name *</label><input type="text" id="co-name" required></div>
+        <div class="field"><label for="co-phone">Phone Number *</label><input type="tel" id="co-phone" required placeholder="+92300..."></div>
+        <div class="field"><label for="co-address">Delivery Address *</label><textarea id="co-address" rows="4" required placeholder="Street address, area, landmark..."></textarea></div>
+        <button type="submit" class="btn btn-primary btn-block" id="co-submit">Review Order</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="confirm-order-modal">
+    <div class="card modal">
+      <div class="modal-head"><h3 style="margin:0;">Confirm Your Order</h3><button class="close-x" id="confirm-modal-close">✕</button></div>
+      <div id="confirm-order-content" style="font-size:.9rem; line-height:1.7;"></div>
+      <div style="margin-top:20px; display:flex; gap:10px;">
+        <button type="button" class="btn btn-quiet btn-block" id="edit-order-btn">Edit Details</button>
+        <button type="button" class="btn btn-primary btn-block" id="finalize-order-btn">Place Order</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- LOGIN VIEW -->
+<div id="view-login" style="display:none;">
+  <div class="center-column">
+    <div class="card auth-card">
+      <div class="auth-head"><a class="brand" id="brand-home-login">Go<span>Ragius</span></a><p style="margin-top:6px;">Sign in to check out or manage orders.</p></div>
+      <div class="auth-tabs"><div class="auth-tab active" data-tab="login">Log in</div><div class="auth-tab" data-tab="signup">Create account</div></div>
+      <form id="auth-form">
+        <div class="field"><label for="email">Email</label><input type="email" id="email" required autocomplete="email"></div>
+        <div class="field"><label for="password">Password</label><input type="password" id="password" required autocomplete="current-password" minlength="6"><div class="field-error" style="display:none;" id="pw-err">At least 6 characters.</div></div>
+        <button type="submit" class="btn btn-primary btn-block" id="submit-btn">Log in</button>
+      </form>
+      <p class="muted" style="text-align:center; margin-top:18px; font-size:.8rem;">Admin access is granted separately.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN VIEW -->
+<div id="view-admin" style="display:none;">
+  <div id="admin-app" style="display:none;">
+    <div class="admin-layout">
+      <aside class="side">
+        <a class="brand" id="brand-home-admin">Go<span>Ragius</span></a>
+        <div class="side-link active" data-panel="panel-dashboard">Dashboard</div>
+        <div class="side-link" data-panel="panel-products">Products</div>
+        <div class="side-link" data-panel="panel-orders">Orders</div>
+        <div class="side-link" data-panel="panel-customers">Customers</div>
+        <div class="side-link" data-panel="panel-feedback">Feedback <span class="tab-pill" id="fb-side-count" style="display:none;">0</span></div>
+        <div style="height:1px;background:var(--line);margin:16px 8px;"></div>
+        <div class="side-link" id="view-store-link">← Storefront</div>
+        <div class="side-link" id="logout-btn">Log out</div>
+      </aside>
+
+      <main class="admin-main">
+        <div class="main-head"><div><div class="eyebrow">Admin</div><h2 style="margin:0;">Dashboard</h2></div><span class="badge badge-admin" id="admin-email"></span></div>
+
+        <!-- DASHBOARD -->
+        <section id="panel-dashboard" class="panel active">
+          <div class="stat-row">
+            <div class="card stat-card"><div class="stat-num" id="stat-products">–</div><div class="stat-label">Products</div></div>
+            <div class="card stat-card"><div class="stat-num" id="stat-orders">–</div><div class="stat-label">Total Orders</div></div>
+            <div class="card stat-card"><div class="stat-num" id="stat-revenue">–</div><div class="stat-label">Revenue</div></div>
+            <div class="card stat-card"><div class="stat-num" id="stat-pending">–</div><div class="stat-label">Pending</div></div>
+            <div class="card stat-card"><div class="stat-num" id="stat-feedback">–</div><div class="stat-label">Feedback &amp; Reviews</div></div>
+          </div>
+          <div class="card" style="padding:20px;">
+            <h3>Recent Orders</h3>
+            <div id="dashboard-orders" style="max-height:400px; overflow-y:auto;"></div>
+          </div>
+        </section>
+
+        <!-- PRODUCTS -->
+        <section id="panel-products" class="panel">
+          <div class="card">
+            <div style="padding:16px 18px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--line);"><h3 style="margin:0;">Products</h3><button class="btn btn-primary btn-sm" id="new-product-btn">+ Add</button></div>
+            <table><thead><tr><th></th><th>Name</th><th>Price</th><th>Stock</th><th>Status</th><th></th></tr></thead><tbody id="products-tbody"></tbody></table>
+          </div>
+        </section>
+
+        <!-- ORDERS -->
+        <section id="panel-orders" class="panel">
+          <div class="card">
+            <div style="padding:16px 18px; border-bottom:1px solid var(--line); display:flex; justify-content:space-between; align-items:center;">
+              <h3 style="margin:0;">All Orders</h3>
+              <button class="btn btn-quiet btn-sm" id="export-orders-btn">📥 Export Orders (CSV)</button>
+            </div>
+            <div id="orders-list" style="padding:16px 18px;"></div>
+          </div>
+        </section>
+
+        <!-- CUSTOMERS -->
+        <section id="panel-customers" class="panel">
+          <div class="card">
+            <div style="padding:16px 18px; border-bottom:1px solid var(--line);"><h3 style="margin:0;">Customers</h3></div>
+            <table><thead><tr><th>Customer</th><th>Phone</th><th>Orders</th><th>Total Spent</th><th>Joined</th></tr></thead><tbody id="customers-tbody"></tbody></table>
+          </div>
+        </section>
+        <!-- FEEDBACK -->
+        <section id="panel-feedback" class="panel">
+          <div class="card">
+            <div style="padding:16px 18px; border-bottom:1px solid var(--line); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+              <div><h3 style="margin:0;">Customer Feedback &amp; Reviews</h3><div class="muted" id="fb-summary" style="font-size:.82rem;"></div></div>
+              <select id="fb-filter" style="max-width:170px;">
+                <option value="all">All</option>
+                <option value="review">Reviews only</option>
+                <option value="feedback">Feedback only</option>
+              </select>
+            </div>
+            <div id="fb-admin-list" style="padding:16px 18px;"></div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+  <div class="center-column" id="admin-loading"><p>Checking access…</p></div>
+
+  <!-- MODALS -->
+  <div class="modal-overlay" id="product-modal">
+    <div class="card modal">
+      <div class="modal-head"><h3 id="modal-title" style="margin:0;">Add product</h3><button class="close-x" id="modal-close">✕</button></div>
+      <form id="product-form">
+        <input type="hidden" id="pf-id">
+        <div class="field"><label>Name</label><input id="pf-name" required></div>
+        <div class="field"><label>Description</label><textarea id="pf-desc" rows="3"></textarea></div>
+        <div class="two-col">
+          <div class="field"><label>Price (Rs)</label><input id="pf-price" type="number" min="0" step="1" required></div>
+          <div class="field"><label>Stock</label><input id="pf-stock" type="number" min="0" step="1" required></div>
+        </div>
+        <div class="field"><label>Image URL</label><input id="pf-image" type="text" placeholder="https://..."></div>
+        <button type="submit" class="btn btn-primary btn-block" id="pf-submit">Save product</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="order-modal">
+    <div class="card modal">
+      <div class="modal-head"><h3 style="margin:0;">Order Details</h3><button class="close-x" id="order-modal-close">✕</button></div>
+      <div id="order-modal-content" style="font-size:.9rem; line-height:1.6;"></div>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc, serverTimestamp, collection, addDoc, updateDoc, deleteDoc, onSnapshot, query, where, runTransaction, Timestamp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCn8GQKnn1Ir2iZTaicT-JZ-5l8yPxJMzQ",
+  authDomain: "perfume-24a0c.firebaseapp.com",
+  projectId: "perfume-24a0c",
+  storageBucket: "perfume-24a0c.firebasestorage.app",
+  messagingSenderId: "357250895447",
+  appId: "1:357250895447:web:63a9dba514e0e436b39d12"
+};
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+// WAVE DATA - floating strip uses shop product photos
+const waveImages = [];
+
+function showToast(msg, type = "") {
+  let root = document.getElementById("toast-root");
+  if (!root) { root = document.createElement("div"); root.id = "toast-root"; document.body.appendChild(root); }
+  const el = document.createElement("div");
+  el.className = `toast ${type}`.trim();
+  el.textContent = msg;
+  root.appendChild(el);
+  console.log(`[${type}] ${msg}`);
+  setTimeout(() => el.remove(), 3200);
+}
+
+// AUTH
+async function signUp(email, password) {
+  const cred = await createUserWithEmailAndPassword(auth, email, password);
+  await setDoc(doc(db, "users", cred.user.uid), { email, role: "customer", createdAt: serverTimestamp() });
+  return cred.user;
+}
+async function logIn(email, password) {
+  const cred = await signInWithEmailAndPassword(auth, email, password);
+  return cred.user;
+}
+async function logOut() { await signOut(auth); }
+async function getUserProfile(uid) {
+  const snap = await getDoc(doc(db, "users", uid));
+  return snap.exists() ? snap.data() : null;
+}
+function whoAmI() {
+  return new Promise((resolve) => {
+    const unsub = onAuthStateChanged(auth, async (user) => {
+      unsub();
+      if (!user) return resolve({ user: null, profile: null });
+      try {
+        const profile = await getUserProfile(user.uid);
+        resolve({ user, profile });
+      } catch(e) {
+        console.error("Profile fetch error:", e);
+        resolve({ user, profile: null });
+      }
+    });
+  });
+}
+
+// CART
+const CART_KEY = "gogipsy_cart_v1";
+function readCart() { try { return JSON.parse(localStorage.getItem(CART_KEY)) || []; } catch { return []; } }
+function writeCart(items) { localStorage.setItem(CART_KEY, JSON.stringify(items)); document.dispatchEvent(new CustomEvent("cart:changed", { detail: items })); }
+function getCart() { return readCart(); }
+function addToCart(product, qty = 1) {
+  const items = readCart();
+  const existing = items.find((i) => i.productId === product.id);
+  if (existing) { existing.qty = Math.min(existing.qty + qty, product.stock ?? 99); }
+  else { items.push({ productId: product.id, name: product.name, price: product.price, imageUrl: product.imageUrl || "", qty, stock: product.stock ?? 99 }); }
+  writeCart(items);
+}
+function updateQty(productId, qty) {
+  let items = readCart();
+  if (qty <= 0) { items = items.filter((i) => i.productId !== productId); }
+  else { const item = items.find((i) => i.productId === productId); if (item) item.qty = Math.min(qty, item.stock ?? 99); }
+  writeCart(items);
+}
+function clearCart() { writeCart([]); }
+function cartTotal() { return readCart().reduce((sum, i) => sum + i.price * i.qty, 0); }
+function cartCount() { return readCart().reduce((sum, i) => sum + i.qty, 0); }
+
+function esc(str = "") { return String(str).replace(/[&<>"']/g, m => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[m])); }
+
+// VIEW SWITCHING
+const VIEW_IDS = { store: "view-store", login: "view-login", admin: "view-admin" };
+let pendingView = "store";
+function showView(name) {
+  Object.values(VIEW_IDS).forEach(id => document.getElementById(id).style.display = "none");
+  document.getElementById(VIEW_IDS[name]).style.display = "";
+  window.scrollTo(0, 0);
+  if (name === "admin") enterAdmin();
+  if (name === "store") { refreshNav(); }
+}
+function goLogin(next) { pendingView = next || "store"; showView("login"); }
+
+["brand-home-store","brand-home-login","brand-home-admin","brand-home-footer"].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) el.addEventListener("click", () => showView("store"));
+});
+
+// AUTH TABS
+let authMode = "login";
+const authTabs = document.querySelectorAll(".auth-tab");
+const submitBtn = document.getElementById("submit-btn");
+const authForm = document.getElementById("auth-form");
+
+function setAuthTab(mode) {
+  authMode = mode;
+  authTabs.forEach(t => t.classList.toggle("active", t.dataset.tab === mode));
+  submitBtn.textContent = mode === "login" ? "Log in" : "Create account";
+}
+
+authTabs.forEach(tab => {
+  tab.addEventListener("click", () => setAuthTab(tab.dataset.tab));
+});
+
+document.getElementById("footer-signin").addEventListener("click", () => {
+  setAuthTab("login");
+  goLogin("store");
+});
+document.getElementById("footer-signup").addEventListener("click", () => {
+  setAuthTab("signup");
+  goLogin("store");
+});
+
+// NAV
+async function refreshNav() {
+  const { user, profile } = await whoAmI();
+  const acc = document.getElementById("nav-account");
+  acc.textContent = user ? "Log out" : "Sign in";
+  acc.onclick = user ? async () => { await logOut(); showToast("Logged out", "success"); refreshNav(); showView("store"); } : () => { setAuthTab("login"); goLogin("store"); };
+  document.getElementById("nav-admin-link").style.display = profile?.role === "admin" ? "" : "none";
+}
+document.getElementById("admin-link").addEventListener("click", () => showView("admin"));
+
+// STORE - PRODUCTS REALTIME
+let products = [];
+let searchTerm = "";
+function loadProducts() {
+  try {
+    const q = collection(db, "products");
+    onSnapshot(q, (snap) => {
+      products = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      renderGrid();
+      renderWave();
+    }, (e) => {
+      console.error("loadProducts error:", e);
+      showToast("Error loading products", "error");
+    });
+  } catch(e) {
+    console.error("loadProducts error:", e);
+  }
+}
+
+function renderGrid() {
+  const grid = document.getElementById("product-grid");
+  if (!products.length) { grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;"><h3>Nothing on the shelf yet</h3></div>`; return; }
+  const q = searchTerm.trim().toLowerCase();
+  const list = q ? products.filter(p => `${p.name || ""} ${p.description || ""}`.toLowerCase().includes(q)) : products;
+  if (!list.length) { grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;"><h3>No perfumes match “${esc(searchTerm.trim())}”</h3><p>Try a different name or clear the search.</p></div>`; return; }
+  grid.innerHTML = list.map(p => `
+    <div class="card product">
+      <div class="product-img">${p.imageUrl ? `<img src="${esc(p.imageUrl)}" alt="${esc(p.name)}">` : ""}</div>
+      <div class="product-body">
+        <div class="product-name">${esc(p.name)}</div>
+        ${ratingLine(p.id)}
+        <p class="product-desc">${esc(p.description || "")}</p>
+        <div class="product-foot">
+          <span class="price">Rs ${Number(p.price).toLocaleString()}</span>
+          ${p.stock > 0 ? `<button class="btn btn-primary btn-sm" data-add="${p.id}">Add</button>` : `<span class="badge badge-out">Sold out</span>`}
+        </div>
+        <button class="btn btn-quiet btn-sm btn-block" data-review="${esc(p.id)}" style="margin-top:4px;">✎ Write a review</button>
+      </div>
+    </div>
+  `).join("");
+  grid.querySelectorAll("[data-review]").forEach(btn => btn.addEventListener("click", () => openFeedback("review", { productId: btn.dataset.review })));
+  grid.querySelectorAll("[data-rate]").forEach(btn => btn.addEventListener("click", () => openFeedback("review", { productId: btn.dataset.rate, rating: Number(btn.dataset.star) })));
+  grid.querySelectorAll("[data-add]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const product = products.find(p => p.id === btn.dataset.add);
+      if (product) {
+        addToCart(product, 1);
+        showToast(`Added ${product.name}`, "success");
+      }
+    });
+  });
+}
+
+// STORE - CART DRAWER
+const drawer = document.getElementById("drawer");
+const overlay = document.getElementById("drawer-overlay");
+function renderDrawer() {
+  const items = getCart();
+  const container = document.getElementById("drawer-items");
+  document.getElementById("cart-count").textContent = cartCount();
+  const navCount = document.getElementById("nav-cart-count");
+  navCount.textContent = cartCount();
+  navCount.classList.toggle("zero", cartCount() === 0);
+  document.getElementById("drawer-total").textContent = `Rs ${cartTotal().toLocaleString()}`;
+  if (!items.length) { container.innerHTML = `<div class="empty-state"><h3>Your cart is empty</h3></div>`; return; }
+  container.innerHTML = items.map(i => `
+    <div class="cart-line">
+      <img src="${esc(i.imageUrl)}" alt="">
+      <div class="cart-line-info">
+        <div class="cart-line-name">${esc(i.name)}</div>
+        <div class="muted" style="font-size:.82rem;">Rs ${i.price.toLocaleString()}</div>
+        <div class="qty-control">
+          <button class="qty-btn" data-dec="${i.productId}">–</button>
+          <span>${i.qty}</span>
+          <button class="qty-btn" data-inc="${i.productId}">+</button>
+        </div>
+      </div>
+    </div>
+  `).join("");
+  container.querySelectorAll("[data-inc]").forEach(b => b.addEventListener("click", () => { const item = getCart().find(i => i.productId === b.dataset.inc); if (item) updateQty(b.dataset.inc, item.qty + 1); }));
+  container.querySelectorAll("[data-dec]").forEach(b => b.addEventListener("click", () => { const item = getCart().find(i => i.productId === b.dataset.dec); if (item) updateQty(b.dataset.dec, item.qty - 1); }));
+}
+document.addEventListener("cart:changed", renderDrawer);
+function setDrawerTab(tab) {
+  document.querySelectorAll(".drawer-tab").forEach(t => t.classList.toggle("active", t.dataset.dtab === tab));
+  document.getElementById("pane-cart").hidden = tab !== "cart";
+  document.getElementById("pane-orders").hidden = tab !== "orders";
+  document.getElementById("drawer-title").textContent = tab === "cart" ? "Your cart" : "Your orders";
+  if (tab === "orders") document.getElementById("nav-cart-dot").classList.remove("on");
+}
+function openDrawer(tab = "cart") { setDrawerTab(tab); drawer.classList.add("open"); overlay.classList.add("open"); }
+function closeDrawer() { drawer.classList.remove("open"); overlay.classList.remove("open"); }
+document.querySelectorAll(".drawer-tab").forEach(t => t.addEventListener("click", () => setDrawerTab(t.dataset.dtab)));
+document.getElementById("cart-fab").addEventListener("click", () => openDrawer("cart"));
+document.getElementById("nav-cart").addEventListener("click", () => openDrawer("cart"));
+document.getElementById("drawer-close").addEventListener("click", closeDrawer);
+overlay.addEventListener("click", closeDrawer);
+document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeDrawer(); });
+
+document.getElementById("checkout-btn").addEventListener("click", async () => {
+  const items = getCart();
+  if (!items.length) { showToast("Cart is empty", "error"); return; }
+  const { user } = await whoAmI();
+  if (!user) { setAuthTab("login"); goLogin("store"); return; }
+  document.getElementById("checkout-modal").classList.add("open");
+});
+
+document.getElementById("checkout-modal-close").addEventListener("click", () => {
+  document.getElementById("checkout-modal").classList.remove("open");
+});
+
+document.getElementById("checkout-modal").addEventListener("click", (e) => {
+  if (e.target.id === "checkout-modal") document.getElementById("checkout-modal").classList.remove("open");
+});
+
+document.getElementById("checkout-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const items = getCart();
+  if (!items.length) return;
+  const { user } = await whoAmI();
+  if (!user) { setAuthTab("login"); goLogin("store"); return; }
+
+  const name = document.getElementById("co-name").value.trim();
+  const phone = document.getElementById("co-phone").value.trim();
+  const address = document.getElementById("co-address").value.trim();
+
+  showConfirmOrder(name, phone, address);
+});
+
+function showConfirmOrder(name, phone, address) {
+  const items = getCart();
+  const itemsHTML = items.map(i => `<div style="padding:8px 0; border-bottom:1px solid var(--line-soft);"><div><strong>${esc(i.name)}</strong> ×${i.qty}</div><div class="muted">Rs ${(i.price * i.qty).toLocaleString()}</div></div>`).join("");
+  
+  const confirmContent = `
+    <div style="margin-bottom:16px;">
+      <h4 style="margin:0 0 8px; color:var(--ink);">📍 Delivery Address</h4>
+      <div style="padding:12px; background:var(--line-soft); border-radius:var(--radius-s); word-break:break-word;">${esc(address)}</div>
+    </div>
+
+    <div style="margin-bottom:16px;">
+      <h4 style="margin:0 0 8px; color:var(--ink);">👤 Name</h4>
+      <div style="padding:12px; background:var(--line-soft); border-radius:var(--radius-s);">${esc(name)}</div>
+    </div>
+
+    <div style="margin-bottom:16px;">
+      <h4 style="margin:0 0 8px; color:var(--ink);">📞 Phone</h4>
+      <div style="padding:12px; background:var(--line-soft); border-radius:var(--radius-s);">${esc(phone)}</div>
+    </div>
+
+    <div style="margin-bottom:16px;">
+      <h4 style="margin:0 0 8px; color:var(--ink);">🛍️ Items</h4>
+      <div style="padding:8px;">${itemsHTML}</div>
+    </div>
+
+    <div style="padding:14px; background:var(--success-tint); border-radius:var(--radius-s); border-left:4px solid var(--success);">
+      <div style="font-size:.8rem; color:var(--ink-soft); margin-bottom:6px;">Total Amount</div>
+      <div style="font-size:1.3rem; font-weight:700; color:var(--success);">Rs ${cartTotal().toLocaleString()}</div>
+      <div style="font-size:.75rem; color:var(--ink-soft); margin-top:6px;">Delivery in 2-3 days</div>
+    </div>
+  `;
+
+  document.getElementById("confirm-order-content").innerHTML = confirmContent;
+  document.getElementById("confirm-order-modal").classList.add("open");
+}
+
+document.getElementById("edit-order-btn").addEventListener("click", () => {
+  document.getElementById("confirm-order-modal").classList.remove("open");
+});
+
+document.getElementById("confirm-modal-close").addEventListener("click", () => {
+  document.getElementById("confirm-order-modal").classList.remove("open");
+});
+
+document.getElementById("confirm-order-modal").addEventListener("click", (e) => {
+  if (e.target.id === "confirm-order-modal") document.getElementById("confirm-order-modal").classList.remove("open");
+});
+
+// Finalize order button - All reads before writes in transaction
+document.getElementById("finalize-order-btn").addEventListener("click", async () => {
+  const items = getCart();
+  if (!items.length) return;
+  const { user } = await whoAmI();
+  if (!user) { setAuthTab("login"); goLogin("store"); return; }
+
+  const name = document.getElementById("co-name").value.trim();
+  const phone = document.getElementById("co-phone").value.trim();
+  const address = document.getElementById("co-address").value.trim();
+
+  const btn = document.getElementById("finalize-order-btn");
+  btn.disabled = true; btn.textContent = "Placing order…";
+  try {
+    await runTransaction(db, async (tx) => {
+      // 1. ALL READS FIRST
+      const productUpdates = [];
+      for (const item of items) {
+        const ref = doc(db, "products", item.productId);
+        const snap = await tx.get(ref);
+        if (!snap.exists()) throw new Error(`${item.name} is no longer available.`);
+        const currentStock = snap.data().stock ?? 0;
+        if (currentStock < item.qty) throw new Error(`${item.name} is out of stock (only ${currentStock} left).`);
+        productUpdates.push({ ref, newStock: currentStock - item.qty });
+      }
+
+      // 2. ALL WRITES AFTER READS
+      for (const p of productUpdates) {
+        tx.update(p.ref, { stock: p.newStock, updatedAt: serverTimestamp() });
+      }
+
+      const now = Timestamp.now();
+      const deliveryDate = new Date(now.toDate().getTime() + (Math.floor(Math.random() * 2) + 2) * 86400000);
+      const newOrderRef = doc(collection(db, "orders"));
+      tx.set(newOrderRef, {
+        uid: user.uid,
+        email: user.email,
+        customerName: name,
+        customerPhone: phone,
+        deliveryAddress: address,
+        items,
+        total: cartTotal(),
+        status: "pending",
+        createdAt: now,
+        deliveryDate: Timestamp.fromDate(deliveryDate)
+      });
+    });
+
+    clearCart();
+    document.getElementById("checkout-modal").classList.remove("open");
+    document.getElementById("confirm-order-modal").classList.remove("open");
+    document.getElementById("checkout-form").reset();
+    showToast("Order placed! Delivery in 2-3 days.", "success");
+    openDrawer("orders");
+  } catch (err) {
+    console.error("Checkout error:", err);
+    showToast(err.message || "Couldn't place order", "error");
+  } finally {
+    btn.disabled = false; btn.textContent = "Place Order";
+  }
+});
+
+// Cancel order and restore product stock
+async function cancelOrderAndRestoreStock(orderId) {
+  await runTransaction(db, async (tx) => {
+    const orderRef = doc(db, "orders", orderId);
+    const orderSnap = await tx.get(orderRef);
+    if (!orderSnap.exists()) throw new Error("Order not found");
+    const orderData = orderSnap.data();
+    if (orderData.status === "cancelled") return;
+
+    const prodUpdates = [];
+    if (Array.isArray(orderData.items)) {
+      for (const item of orderData.items) {
+        if (item.productId) {
+          const pRef = doc(db, "products", item.productId);
+          const pSnap = await tx.get(pRef);
+          if (pSnap.exists()) {
+            prodUpdates.push({ ref: pRef, newStock: (pSnap.data().stock ?? 0) + (item.qty || 1) });
+          }
+        }
+      }
+    }
+
+    tx.update(orderRef, { status: "cancelled", cancelledAt: serverTimestamp() });
+    for (const p of prodUpdates) {
+      tx.update(p.ref, { stock: p.newStock, updatedAt: serverTimestamp() });
+    }
+  });
+}
+
+// INVOICE / RECEIPT DOWNLOAD
+function downloadInvoice(orderId) {
+  const o = (myOrders || []).find(x => x.id === orderId) || (allOrders || []).find(x => x.id === orderId);
+  if (!o) { showToast("Order details not found", "error"); return; }
+  const createdAt = toDate(o.createdAt);
+  const deliveryDate = toDate(o.deliveryDate);
+  const itemsText = (o.items || []).map(i => `
+    <tr>
+      <td style="padding:10px 8px; border-bottom:1px solid #f0eae1;">${esc(i.name)}</td>
+      <td style="padding:10px 8px; border-bottom:1px solid #f0eae1; text-align:center;">${i.qty}</td>
+      <td style="padding:10px 8px; border-bottom:1px solid #f0eae1; text-align:right;">Rs ${Number(i.price).toLocaleString()}</td>
+      <td style="padding:10px 8px; border-bottom:1px solid #f0eae1; text-align:right;">Rs ${Number(i.price * i.qty).toLocaleString()}</td>
+    </tr>
+  `).join("");
+
+  const invoiceHtml = `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Receipt - Order #${esc(o.id.slice(0,8).toUpperCase())}</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; padding: 40px 20px; color: #2B2420; background: #FBF7F1; }
+    .receipt-box { max-width: 600px; margin: auto; background: #fff; border: 1px solid #E8DFD3; border-radius: 12px; padding: 32px; box-shadow: 0 4px 16px rgba(43,36,32,0.06); }
+    .header { border-bottom: 2px solid #A8434E; padding-bottom: 16px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: flex-end; }
+    h1 { margin: 0; color: #A8434E; font-size: 26px; font-family: serif; }
+    .meta { font-size: 13px; color: #6B6058; }
+    table { width: 100%; border-collapse: collapse; margin: 24px 0; font-size: 14px; }
+    th { text-align: left; background: #F6E7E7; color: #863440; padding: 10px 8px; font-weight: 600; font-size: 13px; }
+    .total-row { text-align: right; font-size: 18px; font-weight: 700; margin-top: 16px; color: #2B2420; }
+    .address-card { background: #FAF5EE; padding: 16px; border-radius: 8px; margin: 20px 0; font-size: 13px; line-height: 1.6; border: 1px solid #E8DFD3; }
+    .footer { margin-top: 36px; padding-top: 20px; border-top: 1px solid #E8DFD3; font-size: 12px; text-align: center; color: #8C827A; }
+    .badge { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 12px; font-weight: 600; text-transform: uppercase; background: #E5F0E9; color: #4C7A5E; }
+  </style>
+</head>
+<body>
+  <div class="receipt-box">
+    <div class="header">
+      <div>
+        <h1>GoRagius</h1>
+        <div class="meta">Small-Batch Fragrance • Karachi, Pakistan</div>
+      </div>
+      <div style="text-align:right;">
+        <span class="badge">${esc(o.status)}</span>
+        <div class="meta" style="margin-top:6px;">Order #${esc(o.id.slice(0,8).toUpperCase())}</div>
+      </div>
+    </div>
+
+    <div><strong>Order Date:</strong> ${createdAt ? createdAt.toLocaleString() : "—"}</div>
+    <div><strong>Expected Delivery:</strong> ${deliveryDate ? deliveryDate.toLocaleDateString() : "2-3 business days"}</div>
+    
+    <div class="address-card">
+      <strong>Shipping Address:</strong><br>
+      ${esc(o.customerName || "—")}<br>
+      Phone: ${esc(o.customerPhone || "—")}<br>
+      Address: ${esc(o.deliveryAddress || "—")}
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th style="text-align:center;">Qty</th>
+          <th style="text-align:right;">Unit Price</th>
+          <th style="text-align:right;">Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${itemsText}
+      </tbody>
+    </table>
+
+    <div class="total-row">Total: Rs ${Number(o.total || 0).toLocaleString()}</div>
+
+    <div class="footer">
+      Thank you for shopping with GoRagius!<br>
+      Questions? Contact us at <strong>goragius@gmail.com</strong>
+    </div>
+  </div>
+</body>
+</html>`;
+
+  const blob = new Blob([invoiceHtml], { type: "text/html" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `GoRagius-Receipt-${o.id.slice(0,8).toUpperCase()}.html`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast("Receipt downloaded", "success");
+}
+window.downloadInvoice = downloadInvoice;
+
+// EXPORT ALL ORDERS TO CSV (ADMIN)
+function exportOrdersCSV() {
+  if (!allOrders.length) { showToast("No orders to export", "error"); return; }
+  const headers = ["Order ID", "Date", "Customer Name", "Email", "Phone", "Delivery Address", "Items", "Total (Rs)", "Status"];
+  const rows = allOrders.map(o => [
+    `"${o.id}"`,
+    `"${o.createdAt ? o.createdAt.toLocaleString().replace(/"/g, '""') : ''}"`,
+    `"${(o.customerName || '').replace(/"/g, '""')}"`,
+    `"${(o.email || '').replace(/"/g, '""')}"`,
+    `"${(o.customerPhone || '').replace(/"/g, '""')}"`,
+    `"${(o.deliveryAddress || '').replace(/"/g, '""')}"`,
+    `"${(o.items || []).map(i => `${i.name} x${i.qty}`).join('; ').replace(/"/g, '""')}"`,
+    o.total || 0,
+    `"${o.status}"`
+  ]);
+  const csvContent = [headers.join(","), ...rows.map(r => r.join(","))].join("\n");
+  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `GoRagius-Orders-${new Date().toISOString().slice(0,10)}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast("Orders CSV exported", "success");
+}
+
+// MY ORDERS: live updates + customer cancel (until shipped)
+let myOrders = [];
+let unsubMyOrders = null;
+let cancelArmed = null;
+const toDate = (v) => v?.toDate ? v.toDate() : (v ? new Date(v) : null);
+const STEPS = [
+  { key: "placed",    label: "Placed" },
+  { key: "packing",   label: "Packing" },
+  { key: "shipped",   label: "Shipped" },
+  { key: "delivered", label: "Delivered" }
+];
+function stepIndex(status) {
+  if (status === "delivered") return 3;
+  if (status === "shipped") return 2;
+  return 1;
+}
+function isActiveOrder(o) { return o.status !== "cancelled" && o.status !== "delivered"; }
+
+function renderMyOrders(user) {
+  const box = document.getElementById("my-orders");
+  const pill = document.getElementById("orders-live-count");
+  const active = myOrders.filter(isActiveOrder).length;
+  pill.textContent = active; pill.style.display = active ? "" : "none";
+
+  if (!user) {
+    box.innerHTML = `<div class="empty-state"><h3>Sign in to see your orders</h3><p>Track updates, download receipts, and manage orders from here.</p><button class="btn btn-primary" id="mo-signin">Sign in</button></div>`;
+    const signinBtn = document.getElementById("mo-signin");
+    if (signinBtn) signinBtn.addEventListener("click", () => { closeDrawer(); setAuthTab("login"); goLogin("store"); });
+    return;
+  }
+  if (!myOrders.length) {
+    box.innerHTML = `<div class="empty-state"><h3>No orders yet</h3><p>Once you place an order, its progress will show up here.</p></div>`;
+    return;
+  }
+  box.innerHTML = myOrders.map(o => {
+    const cancelled = o.status === "cancelled";
+    const idx = stepIndex(o.status);
+    const placed = toDate(o.createdAt);
+    const delivery = toDate(o.deliveryDate);
+    const canCancel = o.status === "pending";
+    const track = cancelled ? "" : `<div class="track">${STEPS.map((st, i) => {
+      const cls = i < idx || (o.status === "delivered" && i === idx) ? "done" : i === idx ? "current" : "";
+      return `<div class="track-step ${cls}"><div class="track-dot">${cls === "done" ? "✓" : ""}</div>${st.label}</div>`;
+    }).join("")}</div>`;
+    const note = cancelled
+      ? `<div class="mo-note bad">This order was cancelled.</div>`
+      : o.status === "delivered" ? `<div class="mo-note ok">Delivered. Thank you for shopping with GoRagius!</div>`
+      : o.status === "shipped" ? `<div class="mo-note ok">On its way${delivery ? " — expected " + delivery.toLocaleDateString() : ""}. Shipped orders can't be cancelled.</div>`
+      : `<div class="mo-note info">We're preparing your order${delivery ? " — expected delivery " + delivery.toLocaleDateString() : ""}.</div>`;
+    const cancelActions = !canCancel ? "" : cancelArmed === o.id
+      ? `<button class="btn btn-quiet btn-sm" data-keep="${esc(o.id)}">Keep</button><button class="btn btn-danger btn-sm" data-confirm-cancel="${esc(o.id)}">Yes, cancel</button>`
+      : `<button class="btn btn-danger btn-sm" data-cancel="${esc(o.id)}">Cancel order</button>`;
+    return `
+      <div class="mo-card" data-oid="${esc(o.id)}">
+        <div class="mo-top">
+          <div><div class="mo-id">#${esc(o.id.slice(0,8).toUpperCase())}</div><div class="mo-date">${placed ? placed.toLocaleString() : ""}</div></div>
+          <span class="badge badge-${esc(o.status)}">${esc(o.status.charAt(0).toUpperCase() + o.status.slice(1))}</span>
+        </div>
+        ${track}
+        ${note}
+        <div class="mo-items">${(o.items || []).map(i => `<div><span>${esc(i.name)} ×${i.qty}</span><span class="muted">Rs ${(i.price * i.qty).toLocaleString()}</span></div>`).join("")}</div>
+        <div class="mo-total"><span>Total</span><span>Rs ${Number(o.total || 0).toLocaleString()}</span></div>
+        <div class="mo-actions">
+          <button class="btn btn-quiet btn-sm" data-invoice="${esc(o.id)}">📥 Download Receipt</button>
+          ${cancelActions}
+        </div>
+      </div>`;
+  }).join("");
+}
+
+document.getElementById("my-orders").addEventListener("click", async (e) => {
+  const t = e.target.closest("button");
+  if (!t) return;
+  const { user } = await whoAmI();
+  if (t.dataset.invoice) {
+    downloadInvoice(t.dataset.invoice);
+  } else if (t.dataset.cancel) {
+    cancelArmed = t.dataset.cancel;
+    renderMyOrders(user);
+  } else if (t.dataset.keep) {
+    cancelArmed = null;
+    renderMyOrders(user);
+  } else if (t.dataset.confirmCancel) {
+    t.disabled = true; t.textContent = "Cancelling…";
+    try {
+      await cancelOrderAndRestoreStock(t.dataset.confirmCancel);
+      showToast("Order cancelled & stock restored", "success");
+    } catch (err) {
+      console.error("Cancel order error:", err);
+      showToast("Couldn't cancel this order — please contact us.", "error");
+    } finally { cancelArmed = null; renderMyOrders(user); }
+  }
+});
+
+onAuthStateChanged(auth, (user) => {
+  if (unsubMyOrders) { unsubMyOrders(); unsubMyOrders = null; }
+  myOrders = []; cancelArmed = null;
+  renderMyOrders(user);
+  refreshNav();
+  if (!user) return;
+
+  const q = query(collection(db, "orders"), where("uid", "==", user.uid));
+  let first = true;
+  unsubMyOrders = onSnapshot(q, (snap) => {
+    myOrders = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    myOrders.sort((a, b) => {
+      const timeA = a.createdAt?.toMillis ? a.createdAt.toMillis() : (a.createdAt?.seconds ? a.createdAt.seconds * 1000 : 0);
+      const timeB = b.createdAt?.toMillis ? b.createdAt.toMillis() : (b.createdAt?.seconds ? b.createdAt.seconds * 1000 : 0);
+      return timeB - timeA;
+    });
+
+    if (!first) {
+      snap.docChanges().filter(c => c.type === "modified").forEach(c => {
+        const st = c.doc.data().status;
+        showToast(`Order #${c.doc.id.slice(0,8).toUpperCase()} is now ${st}`, st === "cancelled" ? "error" : "success");
+        if (!document.getElementById("drawer").classList.contains("open")) document.getElementById("nav-cart-dot").classList.add("on");
+      });
+    }
+    first = false;
+    renderMyOrders(user);
+  }, (err) => {
+    console.error("My orders listener error:", err);
+    showToast("Couldn't load your orders", "error");
+  });
+});
+
+// WHATSAPP — change the number below (international format, digits only, no + or spaces)
+const WHATSAPP_NUMBER = "923001234567";
+const WHATSAPP_MESSAGE = "Hi GoRagius! I'd like to know more about your perfumes.";
+const waLink = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(WHATSAPP_MESSAGE)}`;
+["wa-fab", "footer-wa"].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) { el.href = waLink; el.target = "_blank"; el.rel = "noopener noreferrer"; }
+});
+
+// REVIEWS & FEEDBACK (Firestore collection: "feedback")
+const tms = (v) => v?.toMillis ? v.toMillis() : (v?.seconds ? v.seconds * 1000 : Date.now());
+const byNewest = (a, b) => tms(b.createdAt) - tms(a.createdAt);
+const starsText = (n) => { const r = Math.max(0, Math.min(5, Math.round(n))); return "★".repeat(r) + "☆".repeat(5 - r); };
+let reviews = [];
+let showAllReviews = false;
+
+function ratingLine(productId) {
+  const r = reviews.filter(x => x.productId === productId && x.rating);
+  const avg = r.length ? r.reduce((sum, x) => sum + x.rating, 0) / r.length : 0;
+  const stars = [1, 2, 3, 4, 5].map(n => `<button type="button" class="card-star ${n <= Math.round(avg) ? "on" : ""}" data-rate="${esc(productId)}" data-star="${n}" aria-label="Rate ${n} star${n > 1 ? "s" : ""}">★</button>`).join("");
+  return `<div class="card-rating">${stars}<span class="muted">${r.length ? avg.toFixed(1) + " (" + r.length + ")" : "No reviews yet"}</span></div>`;
+}
+
+function loadReviews() {
+  onSnapshot(query(collection(db, "feedback"), where("type", "==", "review")), (snap) => {
+    reviews = snap.docs.map(d => ({ id: d.id, ...d.data() })).sort(byNewest);
+    renderReviews();
+    if (products.length) renderGrid();
+  }, (e) => console.error("Reviews listener error:", e));
+}
+
+function renderReviews() {
+  const sum = document.getElementById("reviews-summary");
+  const list = document.getElementById("reviews-list");
+  const more = document.getElementById("reviews-more");
+  if (!reviews.length) {
+    sum.innerHTML = "";
+    more.style.display = "none";
+    list.innerHTML = `<div class="empty-state" style="grid-column:1/-1; padding:30px 0;"><p>No reviews yet — be the first to share yours.</p></div>`;
+    return;
+  }
+  const rated = reviews.filter(r => r.rating);
+  if (rated.length) {
+    const avg = rated.reduce((sum, r) => sum + r.rating, 0) / rated.length;
+    sum.innerHTML = `<span class="stars">${starsText(avg)}</span> <strong style="color:var(--ink);">${avg.toFixed(1)}</strong> from ${rated.length} review${rated.length === 1 ? "" : "s"}`;
+  } else sum.innerHTML = "";
+  const shown = showAllReviews ? reviews : reviews.slice(0, 6);
+  list.innerHTML = shown.map(r => `
+    <div class="card review-card">
+      <div class="stars">${starsText(r.rating || 0)}</div>
+      <p>${esc(r.message || "")}</p>
+      <div class="review-meta"><strong style="color:var(--ink);">${esc(r.name || "Customer")}</strong>${r.productName ? " · " + esc(r.productName) : ""} · ${new Date(tms(r.createdAt)).toLocaleDateString()}</div>
+    </div>
+  `).join("");
+  more.style.display = reviews.length > 6 ? "" : "none";
+  more.textContent = showAllReviews ? "Show fewer" : "Show all reviews";
+}
+document.getElementById("product-search").addEventListener("input", (e) => { searchTerm = e.target.value; renderGrid(); });
+document.getElementById("reviews-more").addEventListener("click", () => { showAllReviews = !showAllReviews; renderReviews(); });
+
+const fbModal = document.getElementById("feedback-modal");
+let fbType = "review";
+let fbRating = 0;
+
+function setFbType(t) {
+  fbType = t;
+  document.querySelectorAll(".fb-tab").forEach(b => b.classList.toggle("active", b.dataset.fbtype === t));
+  const isReview = t === "review";
+  document.getElementById("fb-product-wrap").style.display = isReview ? "" : "none";
+  document.getElementById("fb-rating-wrap").style.display = isReview ? "" : "none";
+  document.getElementById("fb-message-label").textContent = isReview ? "Your review" : "Your feedback";
+  document.getElementById("fb-message").placeholder = isReview ? "How does it smell? How long does it last?" : "Tell us how we can do better…";
+  document.getElementById("fb-submit").textContent = isReview ? "Submit review" : "Send feedback";
+}
+function setRating(n) {
+  fbRating = n;
+  document.querySelectorAll(".star-btn").forEach(b => b.classList.toggle("on", Number(b.dataset.star) <= n));
+}
+async function openFeedback(type = "review", opts = {}) {
+  const { user } = await whoAmI();
+  if (!user) { showToast("Please sign in to leave a review or feedback", "error"); setAuthTab("login"); goLogin("store"); return; }
+  const sel = document.getElementById("fb-product");
+  sel.innerHTML = `<option value="">Overall experience</option>` + products.map(p => `<option value="${esc(p.id)}">${esc(p.name)}</option>`).join("");
+  const nameInput = document.getElementById("fb-name");
+  if (!nameInput.value) nameInput.value = (user.email || "").split("@")[0];
+  document.getElementById("fb-message").value = "";
+  setFbType(type);
+  sel.value = opts.productId || "";
+  setRating(opts.rating || 0);
+  fbModal.classList.add("open");
+}
+document.getElementById("open-review-btn").addEventListener("click", () => openFeedback("review"));
+document.getElementById("open-feedback-btn").addEventListener("click", () => openFeedback("feedback"));
+document.getElementById("footer-feedback").addEventListener("click", () => openFeedback("feedback"));
+document.getElementById("fb-close").addEventListener("click", () => fbModal.classList.remove("open"));
+fbModal.addEventListener("click", (e) => { if (e.target === fbModal) fbModal.classList.remove("open"); });
+document.querySelectorAll(".fb-tab").forEach(b => b.addEventListener("click", () => setFbType(b.dataset.fbtype)));
+document.querySelectorAll(".star-btn").forEach(b => b.addEventListener("click", () => setRating(Number(b.dataset.star))));
+
+document.getElementById("feedback-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const { user } = await whoAmI();
+  if (!user) { fbModal.classList.remove("open"); setAuthTab("login"); goLogin("store"); return; }
+  const message = document.getElementById("fb-message").value.trim();
+  const name = document.getElementById("fb-name").value.trim();
+  if (fbType === "review" && !fbRating) { showToast("Please choose a star rating", "error"); return; }
+  if (!message || !name) { showToast("Please fill in your name and message", "error"); return; }
+  const productId = fbType === "review" ? document.getElementById("fb-product").value : "";
+  const productName = productId ? (products.find(p => p.id === productId)?.name || "") : "";
+  const btn = document.getElementById("fb-submit");
+  btn.disabled = true; btn.textContent = "Sending…";
+  try {
+    await addDoc(collection(db, "feedback"), {
+      type: fbType,
+      rating: fbType === "review" ? fbRating : null,
+      productId, productName, message, name,
+      uid: user.uid, email: user.email,
+      createdAt: serverTimestamp()
+    });
+    fbModal.classList.remove("open");
+    showToast(fbType === "review" ? "Thanks for your review!" : "Thanks for your feedback!", "success");
+  } catch (err) {
+    console.error("Feedback error:", err);
+    showToast("Couldn't send — please try again", "error");
+  } finally {
+    btn.disabled = false; setFbType(fbType);
+  }
+});
+
+// WAVE
+function renderWave() {
+  const track = document.getElementById("wave-track");
+  // Built-in images + shop product photos; only images that actually decode are shown
+  const seen = new Set();
+  const candidates = [...waveImages, ...products.filter(p => p.imageUrl).map(p => ({ name: p.name, src: p.imageUrl }))]
+    .filter(b => b.src && !seen.has(b.src) && seen.add(b.src));
+  const token = (renderWave._t = (renderWave._t || 0) + 1);
+  Promise.all(candidates.map(b => new Promise(res => {
+    const im = new Image();
+    im.onload = () => res(im.naturalWidth > 0 ? b : null);
+    im.onerror = () => res(null);
+    im.src = b.src;
+  }))).then(list => {
+    if (token !== renderWave._t) return;
+    const good = list.filter(Boolean);
+    if (!good.length) { track.innerHTML = ""; return; }
+    const esc2 = t => String(t ?? "").replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
+    const one = good.map(b => `<div class="wave-item"><img src="${esc2(b.src)}" alt="${esc2(b.name)}"/><span>${esc2(b.name)}</span></div>`).join("");
+    const copies = Math.max(1, Math.ceil(2400 / (good.length * 168)));
+    const half = one.repeat(copies);
+    track.innerHTML = half + half;
+  });
+}
+
+// LOGIN SUBMISSION
+authForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
+  submitBtn.disabled = true; submitBtn.textContent = "Please wait…";
+  try {
+    if (authMode === "login") await logIn(email, password);
+    else await signUp(email, password);
+    showView(pendingView || "store");
+    showToast(authMode === "login" ? "Welcome back" : "Account created", "success");
+  } catch (err) {
+    console.error("Auth error:", err);
+    const msg = err.code?.includes("email-already") ? "Email already exists" : err.code?.includes("invalid-credential") ? "Email or password incorrect" : err.message || "Auth failed";
+    showToast(msg, "error");
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.textContent = authMode === "login" ? "Log in" : "Create account";
+  }
+});
+
+// ADMIN
+let adminBooted = false;
+async function enterAdmin() {
+  document.getElementById("admin-loading").style.display = "";
+  document.getElementById("admin-app").style.display = "none";
+  const { user, profile } = await whoAmI();
+  if (!user || !profile || profile.role !== "admin") {
+    showToast("Admin access only", "error");
+    if (!user) { setAuthTab("login"); pendingView = "admin"; showView("login"); }
+    else showView("store");
+    return;
+  }
+  document.getElementById("admin-loading").style.display = "none";
+  document.getElementById("admin-app").style.display = "block";
+  document.getElementById("admin-email").textContent = user.email;
+  if (!adminBooted) { adminBooted = true; bootAdmin(); }
+}
+
+function bootAdmin() {
+  document.querySelectorAll(".side-link[data-panel]").forEach(link => {
+    link.addEventListener("click", () => {
+      document.querySelectorAll(".side-link[data-panel]").forEach(l => l.classList.remove("active"));
+      document.querySelectorAll(".panel").forEach(p => p.classList.remove("active"));
+      link.classList.add("active");
+      document.getElementById(link.dataset.panel).classList.add("active");
+    });
+  });
+  document.getElementById("view-store-link").addEventListener("click", () => showView("store"));
+  document.getElementById("logout-btn").addEventListener("click", async () => { await logOut(); showView("store"); });
+  document.getElementById("export-orders-btn").addEventListener("click", exportOrdersCSV);
+
+  // PRODUCTS
+  let adminProducts = [];
+  onSnapshot(collection(db, "products"), (snap) => {
+    adminProducts = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    adminProducts.sort((a, b) => {
+      const timeA = a.createdAt?.toMillis ? a.createdAt.toMillis() : 0;
+      const timeB = b.createdAt?.toMillis ? b.createdAt.toMillis() : 0;
+      return timeB - timeA;
+    });
+    renderAdminProducts();
+    renderStats();
+  }, (err) => { console.error("Products listener error:", err); showToast("Error loading products", "error"); });
+
+  function renderAdminProducts() {
+    const tbody = document.getElementById("products-tbody");
+    if (!adminProducts.length) {
+      tbody.innerHTML = `<tr><td colspan="6"><div class="empty-state"><h3>No products yet</h3></div></td></tr>`;
+      return;
+    }
+    tbody.innerHTML = adminProducts.map(p => `
+      <tr>
+        <td>${p.imageUrl ? `<img class="thumb" src="${esc(p.imageUrl)}" alt="">` : `<div class="thumb"></div>`}</td>
+        <td>${esc(p.name)}</td>
+        <td>Rs ${Number(p.price).toLocaleString()}</td>
+        <td>${p.stock}</td>
+        <td>${p.stock > 0 ? '<span class="badge badge-live">In stock</span>' : '<span class="badge badge-out">Out</span>'}</td>
+        <td class="row-actions">
+          <button class="btn btn-quiet btn-sm" data-edit="${p.id}">Edit</button>
+          <button class="btn btn-danger btn-sm" data-del="${p.id}">Delete</button>
+        </td>
+      </tr>
+    `).join("");
+    tbody.querySelectorAll("[data-edit]").forEach(b => b.addEventListener("click", () => openModal(adminProducts.find(p => p.id === b.dataset.edit))));
+    tbody.querySelectorAll("[data-del]").forEach(b => b.addEventListener("click", () => deleteProduct(b.dataset.del)));
+  }
+
+  // PRODUCT MODAL
+  const modal = document.getElementById("product-modal");
+  const form = document.getElementById("product-form");
+  document.getElementById("new-product-btn").addEventListener("click", () => openModal(null));
+  document.getElementById("modal-close").addEventListener("click", () => modal.classList.remove("open"));
+  modal.addEventListener("click", (e) => { if (e.target === modal) modal.classList.remove("open"); });
+  
+  function openModal(product) {
+    document.getElementById("modal-title").textContent = product ? "Edit product" : "Add product";
+    document.getElementById("pf-id").value = product?.id || "";
+    document.getElementById("pf-name").value = product?.name || "";
+    document.getElementById("pf-desc").value = product?.description || "";
+    document.getElementById("pf-price").value = product?.price ?? "";
+    document.getElementById("pf-stock").value = product?.stock ?? "";
+    document.getElementById("pf-image").value = product?.imageUrl || "";
+    modal.classList.add("open");
+  }
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const id = document.getElementById("pf-id").value;
+    const payload = {
+      name: document.getElementById("pf-name").value.trim(),
+      description: document.getElementById("pf-desc").value.trim(),
+      price: Number(document.getElementById("pf-price").value),
+      stock: Number(document.getElementById("pf-stock").value),
+      imageUrl: document.getElementById("pf-image").value.trim(),
+    };
+    const btn = document.getElementById("pf-submit");
+    btn.disabled = true; btn.textContent = "Saving…";
+    try {
+      if (id) {
+        await updateDoc(doc(db, "products", id), { ...payload, updatedAt: serverTimestamp() });
+        showToast("Product updated", "success");
+      } else {
+        await addDoc(collection(db, "products"), { ...payload, createdAt: serverTimestamp(), updatedAt: serverTimestamp() });
+        showToast("Product added", "success");
+      }
+      modal.classList.remove("open");
+    } catch (err) {
+      console.error("Product save error:", err);
+      showToast(err.message || "Error saving", "error");
+    } finally {
+      btn.disabled = false; btn.textContent = "Save product";
+    }
+  });
+
+  async function deleteProduct(id) {
+    if (!confirm("Delete this product?")) return;
+    try { await deleteDoc(doc(db, "products", id)); showToast("Deleted", "success"); }
+    catch (err) { console.error("Delete error:", err); showToast("Error deleting", "error"); }
+  }
+
+  // ORDERS
+  let allOrders = [];
+  onSnapshot(collection(db, "orders"), (snap) => {
+    allOrders = snap.docs.map(d => {
+      const data = d.data();
+      return { id: d.id, ...data, deliveryDate: data.deliveryDate?.toDate?.() || null, createdAt: data.createdAt?.toDate?.() || null };
+    });
+    allOrders.sort((a, b) => (b.createdAt?.getTime?.() || 0) - (a.createdAt?.getTime?.() || 0));
+    renderOrdersList();
+    renderDashboardOrders();
+    renderStats();
+  }, (err) => { console.error("Orders listener error:", err); showToast("Error loading orders", "error"); });
+
+  function renderOrdersList() {
+    const container = document.getElementById("orders-list");
+    if (!allOrders.length) { container.innerHTML = `<div class="empty-state"><p>No orders yet</p></div>`; return; }
+    container.innerHTML = allOrders.map(o => {
+      const createdAt = o.createdAt;
+      const deliveryDate = o.deliveryDate;
+      const canCancel = o.status === "pending";
+      return `
+        <div class="card order-detail">
+          <div class="order-header">
+            <div>
+              <div class="order-id">Order #${o.id.slice(0,8).toUpperCase()}</div>
+              <div class="order-customer"><strong>${esc(o.customerName || "—")}</strong> | ${esc(o.email)}</div>
+              <div class="order-date">${createdAt?.toLocaleString() || "—"}</div>
+            </div>
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span class="badge badge-${o.status}">${o.status}</span>
+              <select class="admin-status-select" data-status-oid="${o.id}">
+                <option value="pending" ${o.status === "pending" ? "selected" : ""}>Pending</option>
+                <option value="shipped" ${o.status === "shipped" ? "selected" : ""}>Shipped</option>
+                <option value="delivered" ${o.status === "delivered" ? "selected" : ""}>Delivered</option>
+                <option value="cancelled" ${o.status === "cancelled" ? "selected" : ""}>Cancelled</option>
+              </select>
+            </div>
+          </div>
+          <div style="padding:10px; background:var(--line-soft); border-radius:var(--radius-s); margin-bottom:12px; font-size:.85rem;">
+            <strong>📞 Phone:</strong> ${esc(o.customerPhone || "—")}<br>
+            <strong>📍 Address:</strong> ${esc(o.deliveryAddress || "—")}
+          </div>
+          <div class="order-items">${(o.items || []).map(i => `${esc(i.name)} ×${i.qty}`).join(", ")}</div>
+          <div class="order-total">Rs ${Number(o.total || 0).toLocaleString()}</div>
+          <div class="delivery-info ${deliveryDate && new Date() > deliveryDate && o.status !== 'delivered' && o.status !== 'cancelled' ? 'late' : ''}" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+            <div><strong>Delivery:</strong> ${deliveryDate ? deliveryDate.toLocaleDateString() : "—"}</div>
+            <div style="display:flex; gap:6px;">
+              <button class="btn btn-sm btn-quiet" onclick="downloadInvoice('${o.id}')">📥 Receipt</button>
+              ${canCancel ? `<button class="btn btn-sm btn-danger" onclick="cancelOrder('${o.id}')">Cancel & Restock</button>` : ''}
+            </div>
+          </div>
+        </div>
+      `;
+    }).join("");
+
+    container.querySelectorAll("[data-status-oid]").forEach(sel => {
+      sel.addEventListener("change", async (e) => {
+        const orderId = e.target.dataset.statusOid;
+        const newStatus = e.target.value;
+        try {
+          if (newStatus === "cancelled") {
+            await cancelOrderAndRestoreStock(orderId);
+            showToast("Order cancelled and inventory restored", "success");
+          } else {
+            await updateDoc(doc(db, "orders", orderId), { status: newStatus });
+            showToast(`Order status updated to ${newStatus}`, "success");
+          }
+        } catch(err) {
+          console.error("Status update error:", err);
+          showToast("Failed to update status", "error");
+        }
+      });
+    });
+  }
+
+  // Dashboard Recent Orders with Modal details viewer
+  function renderDashboardOrders() {
+    const container = document.getElementById("dashboard-orders");
+    const recent = allOrders.slice(0, 5);
+    if (!recent.length) { container.innerHTML = `<p class="muted">No recent orders</p>`; return; }
+    container.innerHTML = recent.map(o => {
+      const createdAt = o.createdAt;
+      return `
+        <div style="padding:10px; border-bottom:1px solid var(--line-soft); font-size:.85rem; cursor:pointer;" data-view-order="${o.id}">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <strong>${esc(o.customerName || o.email)}</strong>
+            <span class="badge badge-${o.status}">${o.status}</span>
+          </div>
+          <div class="muted">${esc(o.customerPhone || "—")} • ${o.items?.length || 0} items • Rs ${Number(o.total || 0).toLocaleString()} • ${createdAt?.toLocaleString() || "—"}</div>
+        </div>
+      `;
+    }).join("");
+
+    container.querySelectorAll("[data-view-order]").forEach(row => {
+      row.addEventListener("click", () => {
+        const order = allOrders.find(o => o.id === row.dataset.viewOrder);
+        if (order) showOrderModal(order);
+      });
+    });
+  }
+
+  // Order Details Modal
+  const orderModal = document.getElementById("order-modal");
+  document.getElementById("order-modal-close").addEventListener("click", () => orderModal.classList.remove("open"));
+  orderModal.addEventListener("click", (e) => { if (e.target === orderModal) orderModal.classList.remove("open"); });
+
+  function showOrderModal(o) {
+    const content = `
+      <div style="margin-bottom:12px;"><strong>Order ID:</strong> #${esc(o.id.toUpperCase())}</div>
+      <div style="margin-bottom:12px;"><strong>Status:</strong> <span class="badge badge-${o.status}">${o.status}</span></div>
+      <div style="margin-bottom:12px;"><strong>Customer:</strong> ${esc(o.customerName || "—")} (${esc(o.email)})</div>
+      <div style="margin-bottom:12px;"><strong>Phone:</strong> ${esc(o.customerPhone || "—")}</div>
+      <div style="margin-bottom:12px;"><strong>Address:</strong> ${esc(o.deliveryAddress || "—")}</div>
+      <div style="margin-bottom:12px;"><strong>Placed:</strong> ${o.createdAt?.toLocaleString?.() || "—"}</div>
+      <div style="margin-bottom:12px;"><strong>Expected Delivery:</strong> ${o.deliveryDate?.toLocaleDateString?.() || "—"}</div>
+      <hr style="border:0; border-top:1px solid var(--line-soft); margin:14px 0;">
+      <h4>Items:</h4>
+      <div>${(o.items || []).map(i => `<div style="display:flex; justify-content:space-between; padding:4px 0;"><span>${esc(i.name)} × ${i.qty}</span><span>Rs ${(i.price * i.qty).toLocaleString()}</span></div>`).join("")}</div>
+      <div style="display:flex; justify-content:space-between; font-weight:700; margin-top:10px; padding-top:10px; border-top:1px solid var(--line);"><span>Total</span><span>Rs ${Number(o.total || 0).toLocaleString()}</span></div>
+      <div style="margin-top:16px; text-align:right;">
+        <button class="btn btn-sm btn-quiet" onclick="downloadInvoice('${o.id}')">📥 Download Receipt</button>
+      </div>
+    `;
+    document.getElementById("order-modal-content").innerHTML = content;
+    orderModal.classList.add("open");
+  }
+
+  // CUSTOMERS
+  let allUsers = new Map();
+  onSnapshot(collection(db, "users"), (snap) => {
+    allUsers.clear();
+    snap.docs.forEach(d => allUsers.set(d.id, d.data()));
+    renderCustomers();
+  }, (err) => console.error("Users listener error:", err));
+
+  function renderCustomers() {
+    const tbody = document.getElementById("customers-tbody");
+    const customers = {};
+    allOrders.forEach(o => {
+      if (!customers[o.email]) customers[o.email] = { email: o.email, name: "", phone: "", count: 0, total: 0 };
+      customers[o.email].count++;
+      if (o.status !== "cancelled") customers[o.email].total += o.total || 0;
+      if (o.customerName) customers[o.email].name = o.customerName;
+      if (o.customerPhone) customers[o.email].phone = o.customerPhone;
+    });
+    if (!Object.keys(customers).length) { tbody.innerHTML = `<tr><td colspan="5"><div class="empty-state"><p>No customers yet</p></div></td></tr>`; return; }
+    tbody.innerHTML = Object.entries(customers).map(([email, info]) => {
+      const user = Array.from(allUsers.values()).find(u => u.email === email);
+      return `<tr><td><div><strong>${esc(info.name || email)}</strong><br><span class="muted">${esc(email)}</span></div></td><td>${esc(info.phone || "—")}</td><td>${info.count}</td><td>Rs ${Number(info.total).toLocaleString()}</td><td>${user?.createdAt?.toDate?.()?.toLocaleDateString?.() || "—"}</td></tr>`;
+    }).join("");
+  }
+
+  function renderStats() {
+    document.getElementById("stat-products").textContent = adminProducts.length;
+    document.getElementById("stat-orders").textContent = allOrders.length;
+    const revenue = allOrders.filter(o => o.status !== "cancelled").reduce((s, o) => s + (o.total || 0), 0);
+    document.getElementById("stat-revenue").textContent = `Rs ${revenue.toLocaleString()}`;
+    document.getElementById("stat-pending").textContent = allOrders.filter(o => o.status === "pending").length;
+  }
+
+  // FEEDBACK
+  let allFeedback = [];
+  let fbFilter = "all";
+  onSnapshot(collection(db, "feedback"), (snap) => {
+    allFeedback = snap.docs.map(d => ({ id: d.id, ...d.data() })).sort(byNewest);
+    renderAdminFeedback();
+  }, (err) => { console.error("Feedback listener error:", err); showToast("Error loading feedback", "error"); });
+  document.getElementById("fb-filter").addEventListener("change", (e) => { fbFilter = e.target.value; renderAdminFeedback(); });
+
+  function renderAdminFeedback() {
+    const box = document.getElementById("fb-admin-list");
+    const revs = allFeedback.filter(f => f.type === "review" && f.rating);
+    const avg = revs.length ? (revs.reduce((s, f) => s + f.rating, 0) / revs.length).toFixed(1) : null;
+    document.getElementById("stat-feedback").textContent = allFeedback.length;
+    const pill = document.getElementById("fb-side-count");
+    pill.textContent = allFeedback.length; pill.style.display = allFeedback.length ? "" : "none";
+    document.getElementById("fb-summary").textContent = `${allFeedback.length} total · ${allFeedback.filter(f => f.type === "review").length} reviews · ${allFeedback.filter(f => f.type !== "review").length} feedback` + (avg ? ` · average rating ${avg}/5` : "");
+    const list = allFeedback.filter(f => fbFilter === "all" || (fbFilter === "review" ? f.type === "review" : f.type !== "review"));
+    if (!list.length) { box.innerHTML = `<div class="empty-state"><p>Nothing here yet</p></div>`; return; }
+    box.innerHTML = list.map(f => {
+      const isReview = f.type === "review";
+      return `
+        <div class="card fb-admin-card">
+          <div class="fb-admin-top">
+            <div>
+              <span class="badge ${isReview ? "badge-shipped" : "badge-pending"}">${isReview ? "Review" : "Feedback"}</span>
+              ${isReview ? `<span class="stars" style="margin-left:8px;">${starsText(f.rating || 0)}</span>` : ""}
+              ${f.productName ? `<span class="muted" style="margin-left:8px; font-size:.82rem;">on ${esc(f.productName)}</span>` : ""}
+            </div>
+            <button class="btn btn-danger btn-sm" data-del-fb="${esc(f.id)}">Delete</button>
+          </div>
+          <p style="margin:0 0 8px; color:var(--ink); font-size:.9rem;">${esc(f.message || "")}</p>
+          <div class="muted" style="font-size:.78rem;"><strong style="color:var(--ink);">${esc(f.name || "Customer")}</strong> · ${esc(f.email || "—")} · ${new Date(tms(f.createdAt)).toLocaleString()}</div>
+        </div>`;
+    }).join("");
+    box.querySelectorAll("[data-del-fb]").forEach(b => b.addEventListener("click", async () => {
+      if (!confirm("Delete this entry?")) return;
+      try { await deleteDoc(doc(db, "feedback", b.dataset.delFb)); showToast("Deleted", "success"); }
+      catch (err) { console.error("Delete feedback error:", err); showToast("Error deleting", "error"); }
+    }));
+  }
+
+  // CANCEL ORDER ADMIN
+  window.cancelOrder = async function(orderId) {
+    if (!confirm("Cancel this order and restore product stock?")) return;
+    try {
+      await cancelOrderAndRestoreStock(orderId);
+      showToast("Order cancelled and inventory restored", "success");
+    } catch (err) {
+      console.error("Cancel error:", err);
+      showToast("Error cancelling order", "error");
+    }
+  };
+}
+
+// BOOT
+document.getElementById("year").textContent = new Date().getFullYear();
+loadProducts();
+loadReviews();
+renderDrawer();
+refreshNav();
+renderWave();
+showView("store");
+</script>
+</body>
+</html>
